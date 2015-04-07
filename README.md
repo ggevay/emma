@@ -1,23 +1,15 @@
 # Emma
 
-Emma is a **declarative language** for data-parallel programming that is **deeply embedded into Scala** and 
-supports **execution in multiple systems**, enabling programmers to reuse their algorithms across different systems without having to rewrite them.
+Emma is a declarative API for data-parallel programming. Emma algorithms can be executed natively on the Scala runtime or offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
 
-Programs in Emma are compiled to programs in the host system after an **extensive cycle of optimizations** to guarantee executable code that is comparable (or better!) to handwritten programs.
+To achieve optimal performance, the Emma compiler relies on a holistic view of the code as a mixture of control flow and dataflow expressions, as well as an algebraic foundation for data-parallel computation based on monads. 
 
-Currently, supported systems include [Flink 0.9](https://flink.apache.org) and [Spark 1.2](https://spark.apache.org/) in addition to native Scala execution.
-
-<br>
-## Programming Abstractions & API
-Emma's main abstraction is similar to the one used by Spark and Flink: a type that represents homogeneous collections with bag semantics - called DataBag.
-The operators we present here are not abstract. The semantics of each operator are given directly as method definitions in Scala. This feature facilitates rapid prototyping, as it allows the prorammer to incrementally develop, test, and debug the code at small scale locally as a pure Scala program.
+For more detail about the design and implementation of the API and compiler pipeline, please refer to our SIGMOD paper [""](). 
 
 <br>
-**Declarative Select-Project-Join Abstractions**
-
-Emma's API misses some basic binary operators like join and cross. This is a language design choice; in-
-stead, we provide the operations map, flatMap and withFilter which enables the programmer to use Scala's for-comprehension syntax
-to write Select-Project-Join expressions in a declarative way:
+## Programming Abstractions
+Emma provides coarse-grained parallelism contracts through a dedicated type `DataBag[A]` representing a homogenous parallel collection over an element type `A`.
+Computations over Emma bags can be written in declarative form similar to Select-From-Where SQL expressions using Scala `for`-comprehensions:
 
 ```scala
 val zs = for (x <- xs; y <- ys; if p(x,y)) yield (x,y)
@@ -26,9 +18,7 @@ val zs = for (x <- xs; y <- ys; if p(x,y)) yield (x,y)
 <br>
 **Folds**
 
-Native computation on DataBag values is allowed only by means of structural recursion. To that end, Emma 
-exposes a fold operator as well as aliases for commonly used folds (e.g. count, exists, minBy). 
-Summing up a bag of numbers, for example, can be written as:
+Emma exposes a fold operator as well as aliases for commonly used folds (e.g. count, exists, minBy).
 
 ```scala
 val z = xs.fold(0, x => x, (x, y) => x + y)
@@ -38,26 +28,23 @@ val z = xs.sum() // alias for the above
 <br>
 **Grouping & Nesting**
 
-Emma's grouping operator introduces nesting:
-
 ```scala
 val ys: DataBag[Grp[K,DataBag[A]]] = xs.groupBy(k)
 ```
 
-The resulting databag contains groups of input elements that share the same key. The `Grp` type has two components – a
-group key: K, and group values: DataBag[A]. This is fundamentally different from Spark, Flink, and Hadoop MapReduce, where the group values have the type Iterable[A] or Iterator[A]. An ubiquitous support for DataBag nesting allows us to hide primitives like groupByKey, reduceByKey and aggregateByKey, which might appear to be the same, behind a uniform *“groupBy and fold”* programming model.
-To group a bag of (a, b) tuples by a and compute the sum of b for each group, for example, we can write:
+As you can see in the above example, grouping in Emma produces nested DataBags. This is fundamentally different from Spark, Flink, and Hadoop MapReduce, where the group values have the type `Iterable[A]` or `Iterator[A]`. By introducing nested DataBags, we can avoid primitives like groupByKey, reduceByKey or aggregateByKey ans instead offer a declarative way of writing these operations.
+To group a DataBag of tuples `(a, b)` and compute the sum over all `b` with the same `a`, we can simply write:
 
 ```scala
 for (g <- xs.groupBy(_.a)) yield (g.key, g.values.sum())
 ```
 
-Due to the deep embedding approach we commit to, we can recognize nested DataBag patterns like the one above at compile time and rewrite them into more efficient equivalent expressions using host-system primitives like aggregateByKey.
+Emma can recognize nested DataBag patterns at compile time and rewrite them into more efficient equivalent expressions using host-system primitives like aggregateByKey.
 
 <br>
 **Read and Write Operations**
 
-To interface with the core DataBag abstraction, the language also provides operators to read and write data from a file system, as well as convertors for Scala `Seq` types:
+Emma also provides operators to read and write data from a file system, as well as convertors for Scala `Seq` types:
 
 ```scala
 // define schema
@@ -78,7 +65,7 @@ write(outputUrl, CsvOutputFormat[Solution])(
 })
 ```
 
-## Examples
+## Examples/Quickstart
 
 
 
