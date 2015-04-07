@@ -28,12 +28,14 @@ val z = xs.sum() // alias for the above
 <br>
 **Grouping & Nesting**
 
+As you can see in the following example, grouping in Emma produces nested DataBags:
+
 ```scala
 val ys: DataBag[Grp[K,DataBag[A]]] = xs.groupBy(k)
 ```
 
-As you can see in the above example, grouping in Emma produces nested DataBags. This is fundamentally different from Spark, Flink, and Hadoop MapReduce, where the group values have the type `Iterable[A]` or `Iterator[A]`. By introducing nested DataBags, we can avoid primitives like groupByKey, reduceByKey or aggregateByKey ans instead offer a declarative way of writing these operations.
-To group a DataBag of tuples `(a, b)` and compute the sum over all `b` with the same `a`, we can simply write:
+This is fundamentally different from Spark, Flink, and Hadoop MapReduce, where the group values have the type `Iterable[A]` or `Iterator[A]`. By introducing nested DataBags, we can avoid primitives like groupByKey, reduceByKey or aggregateByKey ans instead offer a declarative way of writing these operations.
+To group a DataBag of tuples `(k, v)` and compute the sum over all `v` with the same `k`, we can simply write:
 
 ```scala
 for (g <- xs.groupBy(_.a)) yield (g.key, g.values.sum())
