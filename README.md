@@ -1,6 +1,6 @@
-# Emma: Implicit Parallelism for Big Data Analysis 
+# Emma: Implicit Parallelism for Scalable Data Analysis 
 
-Emma is a declarative API and compiler pipeline for data-parallel programming. 
+Emma is a declarative API and macro-based compiler for scalable data analysis. 
 
 To achieve optimal performance, Emma relies on *an algebraic foundation* for data-parallel computation based on monads, and takes a *holistic view* of the input code as a mixture of control flow and dataflow expressions. During execution, the data-parallel code fragments are identified and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
 
