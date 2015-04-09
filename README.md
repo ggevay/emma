@@ -6,7 +6,6 @@ To achieve optimal performance, Emma takes a *holistic view* of the input code a
 
 For more detail about the design and implementation of the Emma API and compiler pipeline, please refer to our SIGMOD paper ["Implicit Parallelism through Deep Language Embedding"](). 
 
-<br>
 ## Programming Abstractions
 Emma provides coarse-grained parallelism contracts through a dedicated type `DataBag[A]` representing a homogenous parallel collection over an element type `A`.
 Computations over Emma bags can be written in declarative form similar to Select-From-Where SQL expressions using Scala `for`-comprehensions:
@@ -15,7 +14,6 @@ Computations over Emma bags can be written in declarative form similar to Select
 val zs = for (x <- xs; y <- ys; if p(x,y)) yield (x,y)
 ```
 
-<br>
 **Folds**
 
 Emma exposes a fold operator as well as aliases for commonly used folds (e.g. count, exists, minBy).
@@ -43,7 +41,6 @@ for (g <- xs.groupBy(_.a)) yield (g.key, g.values.sum())
 
 Emma can recognize nested DataBag patterns at compile time and rewrite them into more efficient equivalent expressions using host-system primitives like aggregateByKey.
 
-<br>
 **Read and Write Operations**
 
 Emma also provides operators to read and write data from a file system, as well as convertors for Scala `Seq` types:
