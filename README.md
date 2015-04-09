@@ -44,7 +44,7 @@ for (g <- xs.groupBy(_.a)) yield (g.key, g.values.sum())
 
 **Emma** can recognize nested DataBag patterns at compile time and rewrite them into more efficient equivalent expressions using host-system primitives like aggregateByKey.
 
-**Read and Write Operations**
+### Read and Write Operations
 
 **Emma** also provides operators to read and write data from a file system, as well as convertors for Scala `Seq` types:
 
@@ -67,6 +67,6 @@ write(outputUrl, CsvOutputFormat[Solution])(
 })
 ```
 
-## Quickstart
+## Examples/Quickstart
 
 [TODO]
