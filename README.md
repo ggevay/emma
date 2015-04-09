@@ -2,7 +2,7 @@
 
 Emma is a declarative API and compiler pipeline for data-parallel programming. 
 
-To achieve optimal performance, Emma takes a *holistic view* of the input code as a mixture of control flow and dataflow expressions, and relies on *an algebraic foundation* for data-parallel computation based on monads. During execution, the data-parallel code fragments are identified and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
+To achieve optimal performance, Emma relies on *an algebraic foundation* for data-parallel computation based on monads, and takes a *holistic view* of the input code as a mixture of control flow and dataflow expressions. During execution, the data-parallel code fragments are identified and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
 
 For more detail about the design and implementation of the Emma API and compiler pipeline, please refer to our SIGMOD paper ["Implicit Parallelism through Deep Language Embedding"](). 
 
