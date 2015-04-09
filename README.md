@@ -1,4 +1,4 @@
-# Emma
+# Emma: Implicit Parallelism for Big Data Analysis 
 
 Emma is a declarative API and compiler pipeline for data-parallel programming. 
 
