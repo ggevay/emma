@@ -1,14 +1,14 @@
 # Emma: Implicit Parallelism for Scalable Data Analysis 
 
-**Emma** is a declarative API and macro-based compiler for scalable data analysis. 
+**Emma** is a Scala API for scalable data analysis. 
 
-To achieve optimal performance, Emma relies on *an algebraic foundation* for data-parallel computation based on monads, and takes a *holistic view* of the input code as a mixture of control flow and dataflow expressions. During execution, the data-parallel code fragments are identified and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
+The goal of **Emma** is to improve developer productivity by hiding parallelism aspects behind a high-level, declarative API without sacrificing performance. To achieve this, Emma relies on an algebraic foundation for data-parallel computation based on monads, and takes a holistic view of the input code as a mixture of control flow and dataflow expressions. During execution, the data-parallel code fragments are identified and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
 
-For more detail about the design and implementation of the Emma API and compiler pipeline, please refer to our SIGMOD paper ["Implicit Parallelism through Deep Language Embedding"](). 
+For more detail about the design and implementation of the Emma API and compiler pipeline, please refer to our SIGMOD paper ["Implicit Parallelism through Deep Language Embedding"](http://www.user.tu-berlin.de/asteriosk/assets/publications/emma-sigmod2015.pdf). 
 
 ## Programming Abstractions
 
-Emma provides coarse-grained parallelism contracts through a dedicated type `DataBag[A]` representing a homogenous parallel collection over an element type `A`. In contrast to similar APIs (e.g., Cascading, Spark, or Flink), however, the Emma API is *deeply embedded* in Scala. This facilitates a range of language features that greatly improve developer productivity *without loss of performance*.
+Emma provides coarse-grained parallelism contracts through a dedicated type `DataBag[A]` representing a homogenous parallel collection over an element type `A`.
 
 ### Declarative Select-From-Where Syntax
 
