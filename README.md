@@ -2,7 +2,7 @@
 
 **Emma** is a Scala API for scalable data analysis. 
 
-The goal of **Emma** is to improve developer productivity by hiding parallelism aspects behind a high-level, declarative API without sacrificing performance. To achieve this, Emma relies on an algebraic foundation for data-parallel computation based on monads and folds, and takes a holistic view of the input code as a mixture of control flow and dataflow expressions. During execution, the data-parallel code fragments are identified and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
+The goal of **Emma** is to improve developer productivity by hiding parallelism aspects behind a high-level, declarative API without sacrificing performance. To achieve this, Emma relies on an algebraic foundation for data-parallel computation based on monads and folds, and takes a holistic view of the input code as a mixture of control flow and dataflow expressions. During execution, the data-parallel code fragments are identified, rewritten in order to maximize the parallelism potential, and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
 
 For more detail about the design and implementation of the Emma API and compiler pipeline, please refer to our SIGMOD paper ["Implicit Parallelism through Deep Language Embedding"](http://www.user.tu-berlin.de/asteriosk/assets/publications/emma-sigmod2015.pdf). 
 
