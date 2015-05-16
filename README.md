@@ -2,17 +2,17 @@
 
 **Emma** is a declarative API and macro-based compiler for scalable data analysis. 
 
-To achieve optimal performance, **Emma** relies on *an algebraic foundation* for data-parallel computation based on monads, and takes a *holistic view* of the input code as a mixture of control flow and dataflow expressions. During execution, the data-parallel code fragments are identified and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
+To achieve optimal performance, Emma relies on *an algebraic foundation* for data-parallel computation based on monads, and takes a *holistic view* of the input code as a mixture of control flow and dataflow expressions. During execution, the data-parallel code fragments are identified and transparently offloaded to a parallel dataflow engine like [Spark](https://spark.apache.org/) or [Flink](https://flink.apache.org).
 
-For more detail about the design and implementation of the **Emma** API and compiler pipeline, please refer to our SIGMOD paper ["Implicit Parallelism through Deep Language Embedding"](). 
+For more detail about the design and implementation of the Emma API and compiler pipeline, please refer to our SIGMOD paper ["Implicit Parallelism through Deep Language Embedding"](). 
 
 ## Programming Abstractions
 
-**Emma** provides coarse-grained parallelism contracts through a dedicated type `DataBag[A]` representing a homogenous parallel collection over an element type `A`. In contrast to similar APIs (e.g., Cascading, Spark, or Flink), however, the **Emma** API is *deeply embedded* in Scala. This facilitates a range of language features that greatly improve developer productivity *without loss of performance*.
+Emma provides coarse-grained parallelism contracts through a dedicated type `DataBag[A]` representing a homogenous parallel collection over an element type `A`. In contrast to similar APIs (e.g., Cascading, Spark, or Flink), however, the Emma API is *deeply embedded* in Scala. This facilitates a range of language features that greatly improve developer productivity *without loss of performance*.
 
 ### Declarative Select-From-Where Syntax
 
-Computations over **Emma** bags can be written in declarative form similar to Select-From-Where SQL expressions using Scala `for`-comprehensions:
+Computations over Emma bags can be written in declarative form similar to Select-From-Where SQL expressions using Scala `for`-comprehensions:
 
 ```scala
 val zs = for (x <- xs; y <- ys; if p(x,y)) yield (x,y)
@@ -20,7 +20,7 @@ val zs = for (x <- xs; y <- ys; if p(x,y)) yield (x,y)
 
 ### Folds
 
-**Emma** exposes a fold operator as well as aliases for commonly used folds (e.g. count, exists, minBy).
+Emma exposes a fold operator as well as aliases for commonly used folds (e.g. count, exists, minBy).
 
 ```scala
 val z = xs.fold(0, x => x, (x, y) => x + y)
@@ -29,7 +29,7 @@ val z = xs.sum() // alias for the above
 
 ### Grouping & Nesting
 
-As you can see in the following example, grouping in **Emma** produces nested DataBags:
+As you can see in the following example, grouping in Emma produces nested DataBags:
 
 ```scala
 val ys: DataBag[Grp[K,DataBag[A]]] = xs.groupBy(k)
@@ -42,11 +42,11 @@ To group a DataBag of tuples `(k, v)` and compute the sum over all `v` with the 
 for (g <- xs.groupBy(_.a)) yield (g.key, g.values.sum())
 ```
 
-**Emma** can recognize nested DataBag patterns at compile time and rewrite them into more efficient equivalent expressions using host-system primitives like aggregateByKey.
+Emma can recognize nested DataBag patterns at compile time and rewrite them into more efficient equivalent expressions using host-system primitives like aggregateByKey.
 
 ### Read and Write Operations
 
-**Emma** also provides operators to read and write data from a file system, as well as convertors for Scala `Seq` types:
+Emma also provides operators to read and write data from a file system, as well as convertors for Scala `Seq` types:
 
 ```scala
 // define schema
