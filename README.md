@@ -1,4 +1,4 @@
-# Emma: Implicit Parallelism for Deep Data Analysis 
+# Emma: Implicit Parallelism for Scalable Data Analysis 
 
 **Emma** is a declarative API and macro-based compiler for scalable data analysis. 
 
