@@ -230,15 +230,8 @@ trait ComprehensionCombination extends ComprehensionRewriteEngine {
         case q"${lhs: Tree} == ${rhs: Tree}" =>
           val defVars = p.definedVars(root)
 
-          val lhsVars = { // Find expr.vars used in the `lhs`
-            val useVars = lhs.collect { case id @ Ident(n: TermName) => id.term }.toSet
-            defVars intersect useVars
-          }
-
-          val rhsVars = { // Find expr.vars used in the `rhs`
-            val useVars = rhs.collect { case id @ Ident(n: TermName) => id.term }.toSet
-            defVars intersect useVars
-          }
+          val lhsVars = defVars intersect lhs.references
+          val rhsVars = defVars intersect rhs.references
 
           if (lhsVars.size != 1 || rhsVars.size != 1) {
             None // Both `lhs` and `rhs` must refer to exactly one variable

@@ -174,7 +174,9 @@ trait ReflectUtil {
         yield valDef(name, tpe, sym, Flag.SYNTHETIC | Flag.PARAM, pos)
 
       val substituted = body.substitute((for (p <- params) yield p.name -> ref(p.term)): _*)
-      Function(params, substituted).withSym(sym).as[Function]
+      val result = Function(params, substituted).withSym(sym).as[Function]
+      ////result.reTypeChecked
+      result
     }
 
     def select(sym: Symbol): Tree =

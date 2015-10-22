@@ -24,7 +24,8 @@ class BeliefPropagation(
     rt)
 
   def run() = {
-    val algorithm = /* emma.parallelize */ {
+    val algorithm = emma.parallelize
+    {
       // algorithm arguments
       val _epsilon       = epsilon
       val _maxIterations = maxIterations
@@ -90,6 +91,8 @@ class BeliefPropagation(
       while (iterations < _maxIterations && !converged) {
         iterations += 1
 
+        println("iterations: " + iterations)
+
         beliefs.updateWithMany(messages.bag())(
           m => (m.dst, m.state), (b, ms) => {
             b.previous = b.marginal
@@ -131,31 +134,86 @@ class BeliefPropagation(
           Belief(v, s, prob)
         }
 
-        val messagesPrev = messages.bag()
-        messages.updateWithMany(edges)(
-          e => (e.var1, e.var2, e.state2), (m, es) => {
-            m.prob = (for {
-              e <- es
-              v <- variables
-              if v.identity == (e.var1, e.state1)
-              p <- products
-              if p.identity == (e.var1, e.state1)
-              m <- messagesPrev
-              if m.identity == (e.var2, e.var1, e.state1)
-            } yield {
-              v.prior * e.prob * p.marginal / m.prob
-            }).sum()
+//        val messagesPrev = messages.bag()
+//        messages.updateWithMany(edges)(
+//          e => (e.var1, e.var2, e.state2), (m, es) => {
+//            m.prob = (for {
+//              e <- es
+//              v <- variables
+//              if v.identity == (e.var1, e.state1)
+//              p <- products
+//              if p.identity == (e.var1, e.state1)
+//              m <- messagesPrev
+//              if m.identity == (e.var2, e.var1, e.state1)
+//            } yield {
+//              v.prior * e.prob * p.marginal / m.prob
+//            }).sum()
+//            DataBag()
+//          })
+
+//        val msgUpds = for {
+//          m <- messages.bag()
+//        } yield {
+//            (
+//              m.identity,
+//
+//              (for {
+//                e <- edges.withFilter { e => (e.var1, e.var2, e.state2) == m.identity }
+//                v <- variables
+//                if v.identity == (e.var1, e.state1)
+//                p <- products
+//                if p.identity == (e.var1, e.state1)
+//                m <- messages.bag()
+//                if m.identity == (e.var2, e.var1, e.state1)
+//              } yield {
+//                  v.prior * e.prob * p.marginal / m.prob
+//                }).sum()
+//              )
+//          }
+//
+//        messages.updateWithOne(msgUpds)(
+//          u => u._1, (m, u) => {
+//            m.prob = u._2
+//            DataBag()
+//          })
+
+
+        //////////////////////////
+        //import eu.stratosphere.emma.ir._
+        //////////////////////////
+
+        ////
+        val probabilities = for {
+          e <- edges
+          v <- variables
+          if v.identity == (e.var1, e.state1)
+          p <- products
+          if p.identity == (e.var1, e.state1)
+          m <- messages.bag()
+          if m.identity == (e.var2, e.var1, e.state1)
+        } yield m.identity -> (v.prior * e.prob * p.marginal / m.prob)
+
+        val msgUpdates = for (g <- probabilities groupBy { _._1 })
+          yield g.key -> g.values.sumWith { _._2 }
+
+        messages.updateWithOne(msgUpdates)(
+          _._1, (m, p) => {
+            m.prob = p._2
             DataBag()
           })
+        ////
+
+
       }
 
       val marginals = for (Belief(v, s, p, _) <- beliefs.bag())
         yield Variable(v, s, p)
 
+      println("before write")
       write(output, new CSVOutputFormat[Variable]) { marginals }
     }
 
-    //algorithm run rt
+    algorithm run rt
   }
 }
 

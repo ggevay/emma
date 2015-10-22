@@ -212,6 +212,7 @@ private[emma] trait ComprehensionCompiler
       //  s"Unsupported serialization of non-combinator expression:\n${prettyPrint(e)}\n")
     }
 
+    var ccc = 0
     /**
      * Emits a reified version of the given term [[Tree]].
      *
@@ -231,8 +232,17 @@ private[emma] trait ComprehensionCompiler
             })
         }
 
+      ccc += 1
+      if(ccc == 50) {
+        val x = 42
+      }
       val fun = mk.anonFun(args, tree)
-      showCode(fun, printRootPkg = true)
+      fun.reTypeChecked /////////////////
+      val foo = showCode(fun, printRootPkg = true)
+      if((foo contains "ArrowAssoc") && (foo contains "Double]")) {
+        val bar = 42
+      }
+      foo
     }
   }
 }

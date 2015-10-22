@@ -240,7 +240,20 @@ private[emma] trait ComprehensionModel extends BlackBoxUtil {
       def descend[U](f: Expression => U) = xs foreach f
     }
 
+    def xxxxxxxxxxxxxxxx() = {
+      val xxx = 42
+    }
+
     case class Map(f: Tree, xs: Expression) extends Combinator {
+
+      try {
+        f.reTypeChecked //////////////////////
+      } catch {
+        case _ => {
+          xxxxxxxxxxxxxxxx()
+        }
+      }
+
       def tpe = DATA_BAG(f.trueType.typeArgs.last)
       def descend[U](f: Expression => U) = xs foreach f
     }
@@ -417,7 +430,14 @@ private[emma] trait ComprehensionModel extends BlackBoxUtil {
       id:            TermName,
       term:          Tree,
       comprehension: ExpressionRoot,
-      definition:    Option[Tree])
+      definition:    Option[Tree]) {
+    if(this.toString() contains "Double](g.values)") {
+      val xxx = 1
+    }
+    if(this.toString() contains "Double](g.values") {
+      val xxx = 1
+    }
+  }
 
   // --------------------------------------------------------------------------
   // Transformation & Traversal

@@ -356,10 +356,22 @@ private[emma] trait ComprehensionAnalysis
             } else {
               q"${mk ref gen.lhs}.values".typeChecked
             }
+            if(com.comprehension.toString contains "Double](g.values)") {
+              val xxx = 1
+            }
             com.comprehension.substitute(foldTree, replTree)
+            if(com.comprehension.toString contains "Double](g.values)") {
+              val xxx = 1
+            }
           }
 
+          if(com.comprehension.toString contains "Double](g.values)") {
+            val xxx = 1
+          }
           com.comprehension.substitute(gSym, gen.lhs)
+          if(com.comprehension.toString contains "Double](g.values)") {
+            val xxx = 1
+          }
         }
 
       // Ignore other expression types
