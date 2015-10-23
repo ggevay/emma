@@ -15,7 +15,14 @@ class ConnectedComponentsTest extends FunSuite with Matchers {
   val rt         =  runtime.default()
 
   test("ConnectedComponents calculates the connected components") {
-    val result = new ConnectedComponents("","",rt).algorithm.run(rt)
-    compareBags(result, Seq(Component(1,7), Component(7,7), Component(2,7), Component(6,6), Component(4,6), Component(3,3), Component(5,7)))
+    val rtName = System.getProperty("emma.execution.backend", "")
+    if (rtName == "flink" || rtName == "native") { // because of the stateful
+
+      val result = new ConnectedComponents("", "", rt).algorithm.run(rt)
+      compareBags(result, Seq(Component(1, 7), Component(7, 7), Component(2, 7), Component(6, 6), Component(4, 6), Component(3, 3), Component(5, 7)))
+
+    } else {
+      println("Skipping ConnectedComponentsTest test, because it only works with Flink and Native. (because of the stateful)")
+    }
   }
 }

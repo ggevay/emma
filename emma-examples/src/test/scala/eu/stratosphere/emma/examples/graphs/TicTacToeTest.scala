@@ -14,6 +14,7 @@ class TicTacToeTest extends FlatSpec with Matchers {
 
     val rtName = System.getProperty("emma.execution.backend", "")
     if (rtName == "flink" || rtName == "native") {
+
       val result = new TicTacToe().algorithm.run(rt).fetch()
 
       // Could be compared to the native rt, but it is too slow, so I calculate a "checksum" instead.
@@ -34,6 +35,7 @@ class TicTacToeTest extends FlatSpec with Matchers {
         case v: TicTacToe.Count => Seq(v.count);
         case _ => Seq()
       }).sum should equal(3495)
+
     } else {
       println("Skipping TicTacToe test, because it only works with Flink and Native. (because of the stateful)")
     }

@@ -24,7 +24,8 @@ class BeliefPropagation(
     rt)
 
   def run() = {
-    val algorithm = /* emma.parallelize */ {
+    val algorithm = emma.parallelize
+    {
       // algorithm arguments
       val _epsilon       = epsilon
       val _maxIterations = maxIterations
@@ -131,6 +132,8 @@ class BeliefPropagation(
           Belief(v, s, prob)
         }
 
+        /*
+        // We would like to do this, but this doesn't work with paralellize:
         val messagesPrev = messages.bag()
         messages.updateWithMany(edges)(
           e => (e.var1, e.var2, e.state2), (m, es) => {
@@ -145,6 +148,24 @@ class BeliefPropagation(
             } yield {
               v.prior * e.prob * p.marginal / m.prob
             }).sum()
+         */
+
+        val probabilities = for {
+          e <- edges
+          v <- variables
+          if v.identity == (e.var1, e.state1)
+          p <- products
+          if p.identity == (e.var1, e.state1)
+          m <- messages.bag()
+          if m.identity == (e.var2, e.var1, e.state1)
+        } yield m.identity -> (v.prior * e.prob * p.marginal / m.prob)
+
+        val msgUpdates = for (g <- probabilities groupBy { _._1 })
+          yield g.key -> g.values.sumWith { _._2 }
+
+        messages.updateWithOne(msgUpdates)(
+          _._1, (m, p) => {
+            m.prob = p._2
             DataBag()
           })
       }
@@ -155,7 +176,7 @@ class BeliefPropagation(
       write(output, new CSVOutputFormat[Variable]) { marginals }
     }
 
-    //algorithm run rt
+    algorithm run rt
   }
 }
 
