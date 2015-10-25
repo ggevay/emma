@@ -764,6 +764,45 @@ abstract class BaseCodegenTest(rtName: String) {
       positive plus negative
     })
   }
+
+  @Test def testxxxx(): Unit = {
+    compareWithNative(emma.parallelize {
+//      val as = DataBag(Seq(1 to 10))
+//      val bs = DataBag(Seq(1 to 10))
+//      val cs = DataBag(Seq(1 to 10))
+      val as = DataBag(1 to 10)
+      val bs = DataBag(1 to 10)
+      val cs = DataBag(1 to 10)
+
+      for{
+        a <- as
+        b <- bs
+        if a == b
+        c <- cs
+        if a == c
+      } yield (a,b,c)
+
+//      for{
+//        a <- as
+//        b <- bs
+//        if a == b
+//      } yield (a,b)
+    })
+
+
+//    emma.parallelize {
+//      val as = DataBag(Seq(1 to 10))
+//      val bs = DataBag(Seq(1 to 10))
+//
+//      for {
+//        a <- as
+//        b <- bs
+//        if a == b
+//      } yield (a, b)
+//    }.run(rt)
+
+
+  }
 }
 
 case class ImdbYear(year: Int) {}

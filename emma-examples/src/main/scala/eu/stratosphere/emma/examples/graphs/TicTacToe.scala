@@ -76,9 +76,9 @@ class TicTacToe(rt: Engine = eu.stratosphere.emma.runtime.default())
 
   import eu.stratosphere.emma.examples.graphs.TicTacToe._
 
-  def run() = algorithm run rt
+  def run() = algorithm //run rt
 
-  val algorithm = emma.parallelize
+  val algorithm = //emma.parallelize
   {
     // All subsets (as bitsets) of the squares of the board
     val subsets = DataBag(0 until (1<<9))

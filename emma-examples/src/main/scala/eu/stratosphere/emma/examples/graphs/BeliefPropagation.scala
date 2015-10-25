@@ -81,10 +81,16 @@ class BeliefPropagation(
         for (Variable(v, s, p) <- variables) yield Belief(v, s, p)
       }
 
-      val messages = stateful[Message, (VarId, VarId, StateId)] {
-        (for (Potential(v1, v2, _, s2, _) <- edges)
-          yield Message(v1, v2, s2, 1)).distinct()
-      }
+//      val messages = stateful[Message, (VarId, VarId, StateId)] {
+//        (for (Potential(v1, v2, _, s2, _) <- edges)
+//          yield Message(v1, v2, s2, 1)).distinct()
+//      }
+
+      val initMessages = (for (Potential(v1, v2, _, s2, _) <- edges)
+        yield Message(v1, v2, s2, 1)).distinct()
+
+      val messages = stateful[Message, (VarId, VarId, StateId)](initMessages)
+
 
       var iterations = 0
       var converged  = false

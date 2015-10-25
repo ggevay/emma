@@ -185,7 +185,8 @@ trait ComprehensionCombination extends ComprehensionRewriteEngine {
       ys:     Generator,
       filter: Filter,
       kx:     Function,
-      ky:     Function)
+      ky:     Function,
+      p: ScalaExpr)
 
     def bind(expr: Expression, root: Expression) = new Traversable[RuleMatch] {
       def foreach[U](f: RuleMatch => U) = expr match {
@@ -194,7 +195,7 @@ trait ComprehensionCombination extends ComprehensionRewriteEngine {
           pairs = qualifiers takeWhile { _ != filter } sliding 2
           (xs: Generator) :: (ys: Generator) :: Nil <- pairs
           (kx, ky) <- parseJoinPredicate(root, xs, ys, p)
-        } f(RuleMatch(root, parent, xs, ys, filter, kx, ky))
+        } f(RuleMatch(root, parent, xs, ys, filter, kx, ky, p))
 
         case _ =>
       }
@@ -205,14 +206,14 @@ trait ComprehensionCombination extends ComprehensionRewriteEngine {
     }
 
     def fire(rm: RuleMatch) = {
-      val RuleMatch(root, parent, xs, ys, filter, kx, ky) = rm
+      val RuleMatch(root, parent, xs, ys, filter, kx, ky, p) = rm
       val (prefix, suffix) = parent.qualifiers span { _ != xs }
       // construct combinator node with input and predicate sides aligned
       val join = combinator.EquiJoin(kx, ky, xs.rhs, ys.rhs)
 
       // bind join result to a fresh variable
       val tpt = tq"(${kx.vparams.head.tpt}, ${ky.vparams.head.tpt})"
-      val vd  = mk.valDef(freshName("x"), tpt)
+      val vd  = mk.valDef(freshName("joinResult"), tpt)
       val sym = mk.freeTerm(vd.name.toString, vd.trueType)
       val qs  = suffix drop 2 filter { _ != filter }
 
@@ -254,6 +255,12 @@ trait ComprehensionCombination extends ComprehensionRewriteEngine {
             val vy = ys.lhs.name -> ys.lhs.info
             val kx = mk anonFun (List(vx), lhs)
             val ky = mk anonFun (List(vy), rhs)
+            //
+            //ky.reTypeChecked
+            if(ky.toString() contains "joinResult$6") {
+              val xx = 42
+            }
+            //
             Some(kx, ky)
           } else if ((lhsVars contains ys.lhs) &&
                      (rhsVars contains xs.lhs)) {
@@ -262,6 +269,12 @@ trait ComprehensionCombination extends ComprehensionRewriteEngine {
             val vy = ys.lhs.name -> ys.lhs.info
             val kx = mk anonFun (List(vx), rhs)
             val ky = mk anonFun (List(vy), lhs)
+            //
+            //ky.reTypeChecked
+            if(ky.toString() contains "joinResult$6") {
+              val xx = 42
+            }
+            //
             Some(kx, ky)
           } else None  // Something else
 
@@ -310,8 +323,8 @@ trait ComprehensionCombination extends ComprehensionRewriteEngine {
       // construct combinator node with input and predicate sides aligned
       val cross = combinator.Cross(xs.rhs, ys.rhs)
 
-      // bind join result to a fresh variable
-      val vd  = mk.valDef(freshName("x"), tq"(${rm.xs.tpe}, ${rm.ys.tpe})")
+      // bind cross result to a fresh variable
+      val vd  = mk.valDef(freshName("crossResult"), tq"(${rm.xs.tpe}, ${rm.ys.tpe})")
       val sym = mk.freeTerm(vd.name.toString, vd.trueType)
 
       // substitute [v._1/x] in affected expressions

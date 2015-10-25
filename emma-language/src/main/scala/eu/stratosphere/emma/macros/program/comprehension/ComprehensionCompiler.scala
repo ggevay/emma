@@ -231,8 +231,31 @@ private[emma] trait ComprehensionCompiler
             })
         }
 
+      val aaa = showCode(tree)
+      var bbb = ""
+      var ccc: Any = null
+      var ddd: Any = null
+      try {
+//        bbb = showCode(tree.asInstanceOf[Function].body.asInstanceOf[Select].qualifier.asInstanceOf[Block].
+//          stats.apply(0).asInstanceOf[ValDef].rhs.asInstanceOf[Match].selector.asInstanceOf[Typed].expr.asInstanceOf[Select].qualifier)
+
+        ccc = tree.asInstanceOf[Function].body.asInstanceOf[Select].qualifier.asInstanceOf[Block].
+          stats.apply(0).asInstanceOf[ValDef].rhs.asInstanceOf[Match].selector
+
+        bbb = showCode(ccc.asInstanceOf[Typed])
+
+        ddd = showCode(c.untypecheck(ccc.asInstanceOf[Tree]))
+
+//        bbb = showCode(tree.asInstanceOf[Function].body.asInstanceOf[Select].qualifier.asInstanceOf[Block].
+//          stats.apply(0).asInstanceOf[ValDef].rhs.asInstanceOf[Match].selector)
+      } catch {
+        case ex: Throwable =>
+
+      }
+
       val fun = mk.anonFun(args, tree)
-      showCode(fun, printRootPkg = true)
+      val foo = showCode(fun, printRootPkg = true)
+      foo
     }
   }
 }

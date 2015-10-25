@@ -301,15 +301,25 @@ class DataflowGenerator(
     q"$xs.filter(${fUDF.func})"
   }
 
+  def xxxxxxxxxxx() = {
+    val xx = 42
+  }
+
   private def opCode[C, A, B](op: ir.EquiJoin[C, A, B])
       (implicit closure: DataFlowClosure): Tree = {
     // assemble input fragments
-    val xs = generateOpCode(op.xs)
-    val ys = generateOpCode(op.ys)
-    val kx = parseCheck(op.keyx).asInstanceOf[Function]
-    val ky = parseCheck(op.keyy).asInstanceOf[Function]
-    // assemble dataFlow fragment
-    q"$xs.join($ys).where(${kx.body}).equalTo(${ky.body})"
+    try {
+      val xs = generateOpCode(op.xs)
+      val ys = generateOpCode(op.ys)
+      val kx = parseCheck(op.keyx).asInstanceOf[Function]
+      val ky = parseCheck(op.keyy).asInstanceOf[Function]
+      // assemble dataFlow fragment
+      q"$xs.join($ys).where(${kx.body}).equalTo(${ky.body})"
+    } catch {
+      case ex: Throwable =>
+        xxxxxxxxxxx()
+        ???
+    }
   }
 
   private def opCode[C, A, B](op: ir.Cross[C, A, B])
