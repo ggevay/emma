@@ -11,6 +11,14 @@ class CodegenTest extends BaseCodegenTest("flink") {
 
   override def runtimeUnderTest = FlinkLocal("localhost", 6123)
 
+  // TODO: make this work with Spark, and move to BaseCodegenTest
+  // (https://github.com/stratosphere/emma/issues/109)
+  @Test def testNonEmpty(): Unit = {
+    compareWithNative(emma.parallelize{
+      DataBag().nonEmpty
+    })
+  }
+
   @Test def testStatefulCreateFetch() = {
 
     // This only works with Flink at the moment, and only locally
