@@ -43,6 +43,7 @@ class DataflowCompiler(val mirror: Mirror) {
    * @return The ModuleSymbol of the defined object
    */
   def compile(tree: ImplDef, withSource: Boolean = true) = {
+    val xx = showCode(tree)
     val symbol = tb.define(tb.parse(showCode(tree)).asInstanceOf[ImplDef])
     if (withSource) writeSource(symbol, tree)
     logger.info(s"Compiling '${symbol.name}' at '${symbol.fullName}'")
