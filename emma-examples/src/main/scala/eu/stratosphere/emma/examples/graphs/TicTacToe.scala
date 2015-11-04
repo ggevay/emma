@@ -1,16 +1,16 @@
 package eu.stratosphere.emma.examples.graphs
 
 import eu.stratosphere.emma.api._
-import eu.stratosphere.emma.examples.Algorithm
+//import eu.stratosphere.emma.examples.Algorithm
+import eu.stratosphere.emma.api.Algorithm
 import eu.stratosphere.emma.runtime.Engine
 
 
-class TicTacToe(rt: Engine = eu.stratosphere.emma.runtime.default())
-    extends Algorithm(rt) {
+class TicTacToe() extends Algorithm[Unit]() {
 
   import eu.stratosphere.emma.examples.graphs.TicTacToe._
 
-  def run() = algorithm run rt
+  def run(rt: Engine) = algorithm run rt
 
   val algorithm = emma.parallelize
   {
