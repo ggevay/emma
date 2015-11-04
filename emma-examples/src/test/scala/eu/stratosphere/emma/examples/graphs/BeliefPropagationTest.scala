@@ -33,7 +33,7 @@ class BeliefPropagationTest extends FlatSpec with Matchers with BeforeAndAfter {
 
   "Belief Propagation" should "calculate unknown marginal probabilities" in withRuntime() { rt =>
     val rtName = sys.props.getOrElse("emma.execution.backend", "").toLowerCase
-    if (rtName == "flink" || rtName == "native") {
+    //if (rtName == "flink" || rtName == "native") {
       new BeliefPropagation(
         path, s"$path/marginals", epsilon, iterations, rt).run()
 
@@ -76,22 +76,27 @@ class BeliefPropagationTest extends FlatSpec with Matchers with BeforeAndAfter {
       }
 
       unlikely / potential.size.toDouble should equal(1.0 +- 0.05)
-    } else {
-      println("""
-                |Skipping Belief Propagation test, because it only works with Flink and Native.
-                |(due to stateful API support)
-                |""".stripMargin)
-    }
+//    } else {
+//      println("""
+//                |Skipping Belief Propagation test, because it only works with Flink and Native.
+//                |(due to stateful API support)
+//                |""".stripMargin)
+//    }
   }
 
   // Can be a file, or a dir. Recurses in the latter case.
   // (This is for handling the case when the output is multiple files, because the writer has parallelism > 1)
+  // Warning: skips files starting with '.' or '_'.
   def getLinesRecursively(path: String): Seq[String] = {
     def getLinesRecursively0(f: File): Seq[String] = {
-      if (f.isDirectory) {
-        f.listFiles().flatMap(getLinesRecursively0).toSeq
+      if(!f.getName.startsWith(".") && !f.getName.startsWith("_")) {
+        if (f.isDirectory) {
+          f.listFiles().flatMap(getLinesRecursively0).toSeq
+        } else {
+          Source.fromFile(f).getLines().toSeq
+        }
       } else {
-        Source.fromFile(f).getLines().toSeq
+        Seq()
       }
     }
     getLinesRecursively0(new File(path))

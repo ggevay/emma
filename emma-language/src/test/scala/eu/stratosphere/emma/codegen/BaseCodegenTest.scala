@@ -731,6 +731,16 @@ abstract class BaseCodegenTest(rtName: String) {
       positive plus negative
     })
   }
+
+  @Test def testXXX(): Unit = {
+//    compareWithNative(emma.parallelize {
+//      val b = DataBag(Seq(1, 2, 1, 1, 3, 2))
+//      for {
+//        g <- b.groupBy { x => x }
+//      } yield (g.key, g.values.withFilter{x=>x!=2}.count())
+//      //} yield (g.key, g.values.flatMap{x=>if(x!=2){DataBag(Seq(x))}else{DataBag(Seq())}}.count()) // note, that this line in place of the above works OK
+//    })
+  }
 }
 
 case class ImdbYear(year: Int) {}

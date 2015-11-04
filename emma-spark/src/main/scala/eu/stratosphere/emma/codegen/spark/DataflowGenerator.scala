@@ -320,6 +320,36 @@ class DataflowGenerator(val compiler: DataflowCompiler, val sessionID: UUID = UU
       }).map({ case ($x, $y) =>
         _root_.eu.stratosphere.emma.api.Group($x, $y)
       })"""
+
+//    q"""$xs.map({ (..${keyUDF.params}) => {
+//          //println("first map")
+//          (${keyUDF.body}, ${bind(sngUDF.body)(aliases: _*)})
+//        }
+//      }).reduceByKey({ (..${unionUDF.params}) =>
+//        //println("reduceByKey", x$$7, x$$5)
+//        ${unionUDF.body}
+//      }).map(aaa => {
+//        println("second map")
+//        aaa match { case ($x, $y) =>
+//          println("second map inside case")
+//          _root_.eu.stratosphere.emma.api.Group($x, $y)
+//        }
+//      })"""
+
+//    q"""$xs.map({ (..${keyUDF.params}) => {
+//          //println("first map")
+//          (${keyUDF.body}, ${bind(sngUDF.body)(aliases: _*)})
+//        }
+//      }).aggregateByKey(${empty.as[Function].body})(${unionUDF.func}, ${unionUDF.func})
+//      .map(aaa => {
+//        println("second map")
+//        aaa match { case ($x, $y) =>
+//          println("second map inside case")
+//          _root_.eu.stratosphere.emma.api.Group($x, $y)
+//        }
+//      })"""
+
+    //aaa match { case ($x: _root_.eu.stratosphere.emma.examples.graphs.TicTacToe.GameState, $y: Long) =>
   }
 
   private def opCode[A](op: ir.Distinct[A])

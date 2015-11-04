@@ -19,8 +19,10 @@ private[emma] trait ComprehensionCompiler
    * @param compView A view over the comprehended terms in the [[Tree]]
    * @return A [[Tree]] representing the compiled driver
    */
-  def compile(tree: Tree, cfGraph: CFGraph, compView: ComprehensionView): Tree =
-    new Compiler(cfGraph, compView).compile(tree).unTypeChecked
+  def compile(tree: Tree, cfGraph: CFGraph, compView: ComprehensionView): Tree = {
+    val foo = new Compiler(cfGraph, compView).compile(tree).unTypeChecked
+    foo
+  }
 
   private class Compiler(cfGraph: CFGraph, compView: ComprehensionView) {
 

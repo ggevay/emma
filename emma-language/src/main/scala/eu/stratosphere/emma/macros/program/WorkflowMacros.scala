@@ -56,7 +56,7 @@ class WorkflowMacros(val c: blackbox.Context)
     // ----------------------------------------------------------------------
 
     // Construct algorithm object
-    q"""new _root_.eu.stratosphere.emma.api.Algorithm[${weakTypeOf[T]}] with Serializable {
+    val foo = q"""new _root_.eu.stratosphere.emma.api.Algorithm[${weakTypeOf[T]}] with Serializable {
       import _root_.scala.reflect._
 
       def run(engine: $ENGINE): ${weakTypeOf[T]} = engine match {
@@ -71,7 +71,9 @@ class WorkflowMacros(val c: blackbox.Context)
       private def runParallel(engine: $ENGINE): ${weakTypeOf[T]} = {
         ${compile(optimized, cfGraph, compView)}
       }
-    }""".typeChecked
+    }"""
+
+    foo.typeChecked
   }
 
   /** Translate an Emma expression to an [[Algorithm]]. */
