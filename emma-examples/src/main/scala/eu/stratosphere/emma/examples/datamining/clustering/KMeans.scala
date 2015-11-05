@@ -3,7 +3,6 @@ package eu.stratosphere.emma.examples.datamining.clustering
 import java.lang.{Double => JDouble}
 import eu.stratosphere.emma.api._
 import eu.stratosphere.emma.api.model._
-import eu.stratosphere.emma.examples.Algorithm
 import eu.stratosphere.emma.runtime.Engine
 import net.sourceforge.argparse4j.inf.{Namespace, Subparser}
 import org.apache.spark.util.Vector
@@ -19,7 +18,7 @@ object KMeans {
     val output = "output-file"
   }
 
-  class Command extends Algorithm.Command[KMeans] {
+  class Command extends Command[KMeans] {
 
     // algorithm names
     override def name = "k-means"
