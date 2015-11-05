@@ -5,6 +5,7 @@ import eu.stratosphere.emma.api.model._
 import eu.stratosphere.emma.examples.Algorithm
 import eu.stratosphere.emma.macros.BinaryLiterals
 import eu.stratosphere.emma.runtime.Engine
+//import eu.stratosphere.emma.testutil
 
 import scala.language.postfixOps
 
@@ -71,7 +72,7 @@ object TicTacToe {
 }
 
 
-class TicTacToe(rt: Engine = eu.stratosphere.emma.runtime.default())
+class TicTacToe(outPath: String, rt: Engine = eu.stratosphere.emma.runtime.default())
     extends Algorithm(rt) {
 
   import eu.stratosphere.emma.examples.graphs.TicTacToe._
@@ -174,9 +175,9 @@ class TicTacToe(rt: Engine = eu.stratosphere.emma.runtime.default())
     }
 
 //    import java.lang.Integer.toBinaryString
-//    write("/tmp/emma-output/TicTacToe.txt", new CSVOutputFormat[(String, String)]) (
+//    write(eu.stratosphere.emma.testutil.tempPath("/tmp/emma-output/TicTacToe.txt"), new CSVOutputFormat[(String, String)]) (
 //      for (v <- solution.bag()) yield (toBinaryString(v.id.whites) ++ " | " ++ toBinaryString(v.id.blacks), v.vc.toString))
 
-    solution.bag()
+    write(outPath, new CSVOutputFormat[VertexWithValue]) (solution.bag())
   }
 }
